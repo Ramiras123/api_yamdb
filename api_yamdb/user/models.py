@@ -2,11 +2,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-ROLES = {
-    {'user', 'User'},
-    {'moderator', 'Moderator'},
-    {'admin', 'Admin'}
-}
+ROLES = (
+    ('user', 'User'),
+    ('moderator', 'Moderator'),
+    ('admin', 'Admin')
+)
 
 
 class User(AbstractUser):
