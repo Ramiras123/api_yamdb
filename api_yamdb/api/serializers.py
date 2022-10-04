@@ -3,12 +3,12 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 
-class UserSerializers(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         validators=[
             UniqueValidator(queryset=User.objects.all())
         ],
-        required=True
+        required=True,
     )
     email = serializers.EmailField(
         validators=[
@@ -24,9 +24,10 @@ class UserSerializers(serializers.ModelSerializer):
 
 class UserEditSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('username', 'email', 'first_name',
-                  'last_name', 'bio', 'role')
         model = User
+        fields = (
+            'username', 'email', 'first_name',
+            'last_name', 'bio', 'role')
         read_only_fields = ('role',)
 
 
@@ -38,7 +39,7 @@ class TokenSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'confirmation_code',
-            'username',
+            'username'
         )
         extra_kwargs = {
             'username': {
@@ -47,3 +48,24 @@ class TokenSerializer(serializers.ModelSerializer):
                 ]
             }
         }
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        required=True,
+        validators=[
+            UniqueValidator(queryset=User.objects.all())]
+    )
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+
+    def validate_username(self, user):
+        if user.lower() == 'me':
+            raise serializers.ValidationError('Пользователь не может быть изменено')
+        return user
