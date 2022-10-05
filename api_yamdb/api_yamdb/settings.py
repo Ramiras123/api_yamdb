@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -108,6 +109,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 
+DATA_DIR = os.path.join(BASE_DIR, "static", "data")
 
 AUTH_USER_MODEL = 'users.User'
 
