@@ -9,7 +9,10 @@ from rest_framework_simplejwt.tokens import AccessToken
 from .permissions import (IsAdminModeratorAuthorOrReadOnly,
                           IsAdminOrSuperuserOrReadOnly,
                           IsAdmin)
-from .serializers import UserSerializer, UserEditSerializer, TokenSerializer, RegisterSerializer
+from .serializers import (UserSerializer,
+                          UserEditSerializer,
+                          TokenSerializer,
+                          RegisterSerializer)
 from users.models import User
 
 
