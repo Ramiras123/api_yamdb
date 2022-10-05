@@ -3,6 +3,7 @@ import csv
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from reviews.models import Category, Genre, Title
+from users.models import User
 
 class Command(BaseCommand):
     help = 'Import data from csv'
@@ -13,11 +14,13 @@ class Command(BaseCommand):
             ("category.csv", Category),
             ("genre.csv", Genre),
             ("titles.csv", Title),
+            ("users.csv", User),
+            ("genre_title.csv", Title.genre.through),
         ]
 
         for file_name, model in file_models:
-            import_from_file(os.path.join(settings.DATA_DIR, file_name), model)  
- 
+            import_from_file(os.path.join(settings.DATA_DIR, file_name), model)
+
 
 def import_from_file(file_name, model):
     with open(file_name, 'r') as csv_file:
@@ -30,3 +33,4 @@ def import_from_file(file_name, model):
         for row in csv_reader:
             a = {field: row[i] for i,field in enumerate(field_names)}
             _, created = model.objects.get_or_create(**a) 
+
