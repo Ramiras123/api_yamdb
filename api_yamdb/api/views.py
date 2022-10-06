@@ -1,6 +1,3 @@
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
-from rest_framework import filters, permissions, viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 
 from reviews.models import Category, Genre, Title
