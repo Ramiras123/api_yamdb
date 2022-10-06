@@ -17,7 +17,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'reviews.apps.ReviewsConfig',
     'users.apps.UserConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -27,10 +26,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'django_filters',
     'core.apps.CoreConfig',
     'reviews.apps.ReviewsConfig',
-    'django_filters',
-    'django_filters',
 ]
 
 MIDDLEWARE = [

@@ -1,26 +1,13 @@
-from django_filters.rest_framework import DjangoFilterBackend
-
 from reviews.models import Category, Genre, Title
 from .mixins import ListCreateDestroyViewSet
-from .filters import TitlesFilter
-from .permissions import IsAdminOrReadOnly
 from .serializers import (CategorySerializer,
                           GenreSerializer, ReadOnlyTitleSerializer,
                           TitleSerializer)
 
-
-class CategoryViewSet(ListCreateDestroyViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = (IsAdminOrReadOnly,)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ("name",)
-    lookup_field = "slug"
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, filters, status, permissions
+from rest_framework import status
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
@@ -29,15 +16,12 @@ from .permissions import (IsAdminModeratorAuthorOrReadOnly,
                           IsAdmin)
 from .serializers import UserSerializer, UserEditSerializer, TokenSerializer, RegisterSerializer
 from users.models import User
-from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, permissions, viewsets
 from django_filters.rest_framework import DjangoFilterBackend
-
 from reviews.models import Category, Genre, Title
 from .mixins import ListCreateDestroyViewSet
 from .filters import TitlesFilter
-from .permissions import IsAdminOrReadOnly
 from .serializers import (CategorySerializer,
                           GenreSerializer, ReadOnlyTitleSerializer,
                           TitleSerializer)
@@ -46,32 +30,11 @@ from .serializers import (CategorySerializer,
 class CategoryViewSet(ListCreateDestroyViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAdminOrSuperuserOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name",)
     lookup_field = "slug"
 
-
-class GenreViewSet(ListCreateDestroyViewSet):
-    queryset = Genre.objects.all()
-    serializer_class = GenreSerializer
-    permission_classes = (IsAdminOrReadOnly,)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ("name",)
-    lookup_field = "slug"
-
-
-class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
-    serializer_class = TitleSerializer
-    permission_classes = (IsAdminOrReadOnly,)
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = TitlesFilter
-
-    def get_serializer_class(self):
-        if self.action in ("retrieve", "list"):
-            return ReadOnlyTitleSerializer
-        return TitleSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -134,10 +97,11 @@ def create_user(request):
     )
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class GenreViewSet(ListCreateDestroyViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAdminOrSuperuserOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name",)
     lookup_field = "slug"
@@ -146,7 +110,7 @@ class GenreViewSet(ListCreateDestroyViewSet):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAdminOrSuperuserOrReadOnly,)
     filter_backends = [DjangoFilterBackend]
     filterset_class = TitlesFilter
 

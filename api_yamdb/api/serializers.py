@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from reviews.models import Category, Genre, Title
 
+
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         validators=[
@@ -69,7 +70,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         if user.lower() == 'me':
             raise serializers.ValidationError('Пользователь не может быть изменено')
         return user
-
 
 
 class CategorySerializer(serializers.ModelSerializer):
