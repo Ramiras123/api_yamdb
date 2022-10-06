@@ -98,7 +98,7 @@ class Review(models.Model):
         verbose_name='Оценка',
         null=True,
         default=None
-    )    
+    )
     pub_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
