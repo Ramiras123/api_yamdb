@@ -71,6 +71,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
+
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
