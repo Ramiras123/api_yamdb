@@ -1,7 +1,7 @@
-from users.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from reviews.models import Category, Genre, Title, Review, Comment
+from reviews.models import Category, Comment, Genre, Review, Title
+from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -111,9 +111,7 @@ class TitleSerializer(serializers.ModelSerializer):
 
 
 class ReadOnlyTitleSerializer(serializers.ModelSerializer):
-    rating = serializers.IntegerField(
-        source='reviews__score__avg', read_only=True
-    )
+    rating = serializers.IntegerField(read_only=True)
     genre = GenreSerializer(many=True)
     category = CategorySerializer()
 

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 
@@ -65,11 +66,6 @@ class Title(models.Model):
         related_name='titles',
         null=True
     )
-    rating = models.IntegerField(
-        verbose_name='Рейтинг',
-        null=True,
-        default=None
-    )
 
     def __str__(self):
         return self.name
@@ -97,9 +93,16 @@ class Review(models.Model):
     score = models.IntegerField(
         verbose_name='Оценка',
         null=True,
-        default=None
+        default=None,
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
     pub_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['author', 'title'], name="unique_review_title")
+        ]
 
     def __str__(self):
         return self.text
