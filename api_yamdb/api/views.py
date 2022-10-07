@@ -8,15 +8,18 @@ from .serializers import (CategorySerializer,
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from rest_framework import status
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets, filters, status, permissions
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 from .permissions import (IsAdminModeratorAuthorOrReadOnly,
                           IsAdminOrSuperuserOrReadOnly,
                           IsAdmin)
-from .serializers import (UserSerializer, UserEditSerializer,
-                          TokenSerializer, RegisterSerializer)
+from .serializers import (UserSerializer,
+                          UserEditSerializer,
+                          TokenSerializer,
+                          RegisterSerializer)
 from users.models import User
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, permissions, viewsets

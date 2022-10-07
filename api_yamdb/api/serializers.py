@@ -62,6 +62,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
 
+
     class Meta:
         model = User
         fields = ('username', 'email')
