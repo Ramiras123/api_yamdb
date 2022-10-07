@@ -1,3 +1,10 @@
+from reviews.models import Category, Genre, Title, Review, Comment
+from .mixins import ListCreateDestroyViewSet
+from .serializers import (CategorySerializer,
+                          GenreSerializer, ReadOnlyTitleSerializer,
+                          ReviewSerializer, CommentSerializer,
+                          TitleSerializer)
+
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -14,6 +21,20 @@ from .serializers import (UserSerializer,
                           TokenSerializer,
                           RegisterSerializer)
 from users.models import User
+from django.shortcuts import get_object_or_404
+from rest_framework import filters, permissions, viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import TitlesFilter
+from rest_framework.exceptions import ParseError
+
+
+class CategoryViewSet(ListCreateDestroyViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = (IsAdminOrSuperuserOrReadOnly,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("name",)
+    lookup_field = "slug"
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -76,3 +97,67 @@ def create_user(request):
         recipient_list=[user.email],
     )
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class GenreViewSet(ListCreateDestroyViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    permission_classes = (IsAdminOrSuperuserOrReadOnly,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("name",)
+    lookup_field = "slug"
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
+    permission_classes = (IsAdminOrSuperuserOrReadOnly,)
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TitlesFilter
+
+    def get_serializer_class(self):
+        if self.action in ("retrieve", "list"):
+            return ReadOnlyTitleSerializer
+        return TitleSerializer
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = (IsAdminModeratorAuthorOrReadOnly,)
+
+    def get_queryset(self):
+        title_id = self.kwargs.get("title_id")
+        new_queryset = Review.objects.filter(title=title_id)
+        return new_queryset
+
+    def perform_create(self, serializer):
+        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+        if Review.objects.filter(
+            title=title,
+            author=self.request.user
+        ).exists():
+            raise ParseError
+        serializer.save(author=self.request.user, title=title)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = (IsAdminModeratorAuthorOrReadOnly,)
+
+    def get_queryset(self):
+        review = get_object_or_404(
+            Review,
+            title_id=self.kwargs.get('title_id'),
+            pk=self.kwargs.get('review_id')
+        )
+        return review.comments.all().order_by('id')
+
+    def perform_create(self, serializer):
+        review = get_object_or_404(
+            Review,
+            title_id=self.kwargs.get('title_id'),
+            pk=self.kwargs.get('review_id')
+        )
+        serializer.save(author=self.request.user, review=review)
