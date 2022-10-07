@@ -1,11 +1,16 @@
 from django.urls import path, include
-from .views import UserViewSet, get_jwt_token, create_user
-from rest_framework.routers import SimpleRouter
+from .views import (UserViewSet, CategoryViewSet, 
+                    GenreViewSet, TitleViewSet, get_jwt_token, create_user)
+from rest_framework.routers import DefaultRouter
 
-router = SimpleRouter()
+
+router = DefaultRouter()
 
 
 router.register('users', UserViewSet, basename='users')
+router.register(r'categories', CategoryViewSet)
+router.register(r'genres', GenreViewSet)
+router.register(r'titles', TitleViewSet)
 
 auth_urlpatterns = [
     path('token/', get_jwt_token),
