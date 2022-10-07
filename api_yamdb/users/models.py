@@ -47,7 +47,6 @@ class User(AbstractUser):
         blank=True
     )
 
-
     @property
     def is_user(self):
         return self.role == USER
