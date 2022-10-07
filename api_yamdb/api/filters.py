@@ -5,7 +5,8 @@ from reviews.models import Title
 
 class TitlesFilter(FilterSet):
     name = CharFilter(
-        field_name='name'
+        field_name='name',
+        lookup_expr="icontains"
     )
     category = CharFilter(
         field_name='category__slug'
