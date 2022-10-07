@@ -23,6 +23,7 @@ from rest_framework import filters, permissions, viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import TitlesFilter
 from rest_framework.exceptions import ParseError
+from django.db.models import Avg
 
 
 class CategoryViewSet(ListCreateDestroyViewSet):
@@ -106,7 +107,7 @@ class GenreViewSet(ListCreateDestroyViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
+    queryset = Title.objects.all().annotate(rating=Avg("reviews__score"))
     serializer_class = TitleSerializer
     permission_classes = (IsAdminOrSuperuserOrReadOnly,)
     filter_backends = [DjangoFilterBackend]
