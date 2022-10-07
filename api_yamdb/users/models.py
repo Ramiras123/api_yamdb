@@ -18,7 +18,12 @@ class User(AbstractUser):
         max_length=254,
         unique=True
     )
-    bio = models.TextField(max_length=500, null=True, blank=True, verbose_name='О себе')
+    bio = models.TextField(
+        max_length=500,
+        null=True,
+        blank=True,
+        verbose_name='О себе'
+    )
     role = models.TextField(blank=True, choices=ROLES, default='user')
     username = models.CharField(
         max_length=150,
@@ -40,13 +45,6 @@ class User(AbstractUser):
         verbose_name='фамилия',
         max_length=150,
         blank=True
-    )
-    confirmation_code = models.CharField(
-        verbose_name='код подтверждения',
-        max_length=255,
-        null=True,
-        blank=False,
-        default='XXXX'
     )
 
     @property
