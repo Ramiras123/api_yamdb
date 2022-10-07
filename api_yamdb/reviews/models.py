@@ -108,7 +108,6 @@ class Review(models.Model):
         return self.text
 
 
-
 class Comment(models.Model):
     review = models.ForeignKey(
         Review, on_delete=models.CASCADE,
