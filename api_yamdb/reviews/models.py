@@ -2,18 +2,18 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
-
+from django.conf import settings
 User = get_user_model()
 
 
 class Category(models.Model):
     name = models.CharField(
         verbose_name='Название',
-        max_length=256
+        max_length=settings.BIG_INT_LENGTH
     )
     slug = models.SlugField(
         verbose_name='Идентификатор',
-        max_length=50,
+        max_length=settings.SMALL_INT_LENGTH,
         unique=True
     )
 
@@ -27,11 +27,11 @@ class Category(models.Model):
 class Genre(models.Model):
     name = models.CharField(
         verbose_name='Название',
-        max_length=256
+        max_length=settings.BIG_INT_LENGTH,
     )
     slug = models.SlugField(
         verbose_name='Идентификатор',
-        max_length=50,
+        max_length=settings.SMALL_INT_LENGTH,
         unique=True
     )
 
@@ -45,7 +45,7 @@ class Genre(models.Model):
 class Title(models.Model):
     name = models.CharField(
         verbose_name='Название',
-        max_length=200
+        max_length=settings.MID_INT_LENGTH
     )
     year = models.IntegerField(
         verbose_name='Дата выхода'
@@ -67,11 +67,11 @@ class Title(models.Model):
         null=True
     )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Произведение'
+
+    def __str__(self):
+        return self.name
 
 
 class Review(models.Model):

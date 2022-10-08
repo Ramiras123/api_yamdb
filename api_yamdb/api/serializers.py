@@ -69,7 +69,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate_username(self, user):
         if user.lower() == 'me':
             raise serializers.ValidationError(
-                'Пользователь не может быть изменено'
+                'Пользователь me не может быть изменен'
             )
         return user
 
