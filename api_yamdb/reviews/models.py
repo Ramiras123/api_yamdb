@@ -17,11 +17,11 @@ class Category(models.Model):
         unique=True
     )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Категория'
+
+    def __str__(self):
+        return self.name
 
 
 class Genre(models.Model):
@@ -35,11 +35,11 @@ class Genre(models.Model):
         unique=True
     )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Жанр'
+
+    def __str__(self):
+        return self.name
 
 
 class Title(models.Model):
